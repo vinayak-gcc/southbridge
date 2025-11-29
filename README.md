@@ -14,41 +14,52 @@ A high-polish, responsive frontend for a modern AI agent, featuring a streaming 
 
 ## Tech Stack
 
-*   **Framework**: [Next.js 14]
-*   **Styling**: [Tailwind CSS]
-*   **Icons**: [Lucide React]
-*   **Animations**: [Framer Motion]
-*   **Editor**: [@monaco-editor/react]
+*   **Framework**: `Next.js 14`
+*   **Styling**: `Tailwind CSS`
+*   **Icons**: `Lucide React`
+*   **Animations**: `Framer Motion`
+*   **Editor**: `monaco-editor/react`
 *   **Markdown**: `react-markdown` + `react-syntax-highlighter`
 
 ## Folder Structure
 
 ```
-app/
-├── globals.css                 # Global styles & Tailwind directives
-├── layout.tsx                  # Root layout
-└── page.tsx                    # Main application entry point (State & Layout)
-
-components/
-├── chat/
-│   ├── ChatMessage.tsx         # Individual message bubble (Markdown & Styling)
-│   ├── ChatWindow.tsx          # Message list & Scrolling logic
-│   └── useChatStream.ts        # Custom hook for simulating streaming
-├── code-viewer/
-│   ├── CodeViewer.tsx          # Monaco editor wrapper
-│   ├── CodeViewerHeader.tsx    # Editor header (Theme toggle, File info)
-│   └── CodeViewerFooter.tsx    # Editor footer (Status bar)
-└── file-viewer/
-    ├── FileExplorer.tsx        # Recursive file tree container
-    └── FileTreeItem.tsx        # Individual file/folder node
-
+.
+├── app/
+│   ├── globals.css                 # Global styles & Tailwind directives
+│   ├── layout.tsx                  # Root layout
+│   └── page.tsx                    # Main application entry point (State & Layout)
+│
+├── components/
+│   ├── chat/
+│   │   ├── ChatMessage.tsx         # Individual message bubble (Markdown & Styling)
+│   │   ├── ChatWindow.tsx          # Message list & Scrolling logic
+│   │   ├── ScrollToBottom.tsx      # Button to jump to latest message
+│   │   └── useChatStream.ts        # Custom hook for simulating streaming
+│   ├── code-viewer/
+│   │   ├── CodeViewer.tsx          # Monaco editor wrapper
+│   │   ├── CodeViewerHeader.tsx    # Editor header (Theme toggle, File info)
+│   │   └── CodeViewerFooter.tsx    # Editor footer (Status bar)
+│   └── file-viewer/
+│       ├── FileExplorer.tsx        # Recursive file tree container
+│       └── FileTreeItem.tsx        # Individual file/folder node
+│
+├── lib/
+│   └── mock-data.ts                # Mock file system & chat data
+│
+├── public/                         # Static assets (images, icons)
+│
+├── README.md                       # Project documentation
+├── AI_DISCLOSURE.md                # AI usage transparency
+└── ABOUT_ME.md                     # Developer info
 ```
 
-## Some Cool Things I Added
+## Custom Additions
 
-*   **Anime Theme**: Mock data now features an Anime Watchlist.
+*   **Anime List**: Mock data now features an Anime Watchlist.
 *   **Custom Icons**: Chat interface uses personalized `Me.webp` and `southbridge.jpeg` avatars.
 *   **Branding**: Integrated Southbridge logo as the application favicon.
+*   **Transparency**: Added `AI_DISCLOSURE.md` to explain how AI was used (and not used).
 
 ## Future Features
 
