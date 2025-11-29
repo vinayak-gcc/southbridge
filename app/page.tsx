@@ -1,65 +1,85 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { clsx } from 'clsx';
+import { ChatWindow } from '@/components/chat/ChatWindow';
+import { FileExplorer } from '@/components/file-viewer/FileExplorer';
+import { CodeViewer } from '@/components/code-viewer/CodeViewer';
+import { FileNode } from '@/lib/mock-data';
 
 export default function Home() {
+  const [selectedFile, setSelectedFile] = useState<FileNode | undefined>();
+  const [showMobileExplorer, setShowMobileExplorer] = useState(true);
+  const [showDesktopExplorer, setShowDesktopExplorer] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className={clsx("h-screen", theme === 'dark' ? 'dark' : '')}>
+      <div className={clsx("flex flex-col xl:flex-row h-screen w-full overflow-hidden", theme === 'light' ? "bg-white" : "bg-zinc-950")}>
+        {/* Left Side */}
+        <div className={clsx(
+          "flex flex-col border-b xl:border-b-0 xl:border-r relative shrink-0 w-full h-1/2 xl:h-full xl:w-[25%] 2xl:w-1/5",
+          theme === 'light' ? "border-zinc-300" : "border-zinc-800/80"
+        )}>
+          <ChatWindow theme={theme} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Right Side */}
+        <div className={clsx("flex-1 flex flex-col min-w-0 h-1/2 xl:h-full", theme === 'light' ? "bg-white" : "bg-zinc-900/50")}>
+          <div className={clsx("flex h-full relative", theme === 'light' ? 'bg-white' : 'bg-zinc-950')}>
+            {/* Mobile Dropdown */}
+            {showMobileExplorer && (
+              <div
+                className="xl:hidden absolute inset-0 bg-black/60 z-40 backdrop-blur-sm transition-opacity"
+                onClick={() => setShowMobileExplorer(false)}
+              />
+            )}
+
+            {/* Mobile Drawer */}
+            <div className={clsx(
+              "xl:hidden absolute inset-y-0 left-0 z-50 w-72 flex-col border-r transition-transform duration-300 ease-in-out shadow-2xl",
+              theme === 'light' ? "bg-zinc-50 border-zinc-200" : "bg-zinc-950 border-zinc-800/50",
+              showMobileExplorer ? "translate-x-0" : "-translate-x-full"
+            )}>
+              <FileExplorer
+                onSelectFile={(file) => {
+                  setSelectedFile(file);
+                  setShowMobileExplorer(false);
+                }}
+                selectedFileId={selectedFile?.id}
+                theme={theme}
+              />
+            </div>
+
+            {/* Desktop Sidebar */}
+            <div className={clsx(
+              "hidden xl:flex flex-col border-r h-full shrink-0 z-50",
+              theme === 'light' ? "bg-zinc-50 border-zinc-200" : "bg-zinc-950 border-zinc-800/50",
+              "transition-all duration-300 ease-in-out",
+              showDesktopExplorer ? "w-72 xl:w-[25%] translate-x-0" : "w-0 -translate-x-full opacity-0 overflow-hidden"
+            )}>
+              <FileExplorer
+                onSelectFile={(file) => {
+                  setSelectedFile(file);
+                }}
+                selectedFileId={selectedFile?.id}
+                theme={theme}
+              />
+            </div>
+
+            <div className="flex-1 h-full min-w-0 overflow-hidden">
+              <CodeViewer
+                file={selectedFile}
+                theme={theme}
+                setTheme={setTheme}
+                onToggleMobileExplorer={() => setShowMobileExplorer(!showMobileExplorer)}
+                onToggleDesktopExplorer={() => setShowDesktopExplorer(!showDesktopExplorer)}
+              />
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+
+      </div>
+    </main >
   );
 }
